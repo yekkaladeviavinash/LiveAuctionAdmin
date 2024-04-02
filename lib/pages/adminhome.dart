@@ -63,7 +63,7 @@ class Adminhome extends StatelessWidget {
                     ),
                     IconButton(
                       icon: Icon(Icons.mark_chat_read),
-                      onPressed: () => ctrl.statusupdate(ctrl.products[index].pid ?? ''),
+                      onPressed: () => ctrl.statusupdate(ctrl.products[index].pid ?? '',ctrl.products[index].dateAdded ?? ''),
                     ),
                   ],
                 ),

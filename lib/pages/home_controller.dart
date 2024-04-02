@@ -108,27 +108,6 @@ class HomeController extends GetxController {
     }
   }
 
-  // deleteProduct(String id) {
-  //   try {
-  //     Future<String?> prdate = getProductDate(id);
-  //     deleteStringFromDate(prdate as String, id);
-  //     productCollection.doc(id).delete();
-  //     fetchProducts();
-  //     // Iterable<datemodel> today =
-  //     //     dateli.where((datess) => datess.date == getProductDate(id));
-  //     // for (var Model in today) {
-  //     //   // Check if slots exist and add them to productids
-  //     //   // ignore: unnecessary_null_comparison
-  //     //   if (Model.slots != null) {
-  //     //     productids.addAll(Model.slots);
-  //     //   }
-  //     // }
-  //   } catch (e) {
-  //     Get.snackbar('Failed', e.toString(), colorText: Colors.red);
-  //     print(e);
-  //   }
-  // }
-
   Future<void> deleteProduct(String id) async {
     try {
       String? prdate = await getProductDate(id);
@@ -145,12 +124,55 @@ class HomeController extends GetxController {
     }
   }
 
-  void statusupdate(String docId) async {
+  int getProductIndexandtime(String productId) {
+    return getProducttime(productids.indexOf(productId));
+  }
+
+  int getProducttime(int n) {
+    if (n == 0) return 9;
+    if (n == 1) return 11;
+    if (n == 2) return 14;
+    if (n == 3) return 16;
+    if (n == 4) {
+      return 18;
+    } else {
+      return 0;
+    }
+  }
+
+  getproductdate(String docId, String date) async {
+    // String todaydate = DateFormat("yyyy-MM-dd").format(date);
+    // print(todaydate);
     try {
+      QuerySnapshot datesnapshot = await datecollection.get();
+      final List<datemodel> retrieveddates = datesnapshot.docs
+          .map((doc) => datemodel.fromJson(doc.data() as Map<String, dynamic>))
+          .toList();
+      dateli.clear();
+      dateli.assignAll(retrieveddates);
+      update();
+    } catch (e) {
+      print("Error shown in todayauction controller ${e}");
+    }
+    Iterable<datemodel> today = dateli.where((datess) => datess.date == date);
+    for (var dateModel in today) {
+      // Check if slots exist and add them to productids
+      if (dateModel.slots != null) {
+        // print(dateModel.slots.length.toString()+"helooooo");
+        productids.addAll(dateModel.slots);
+      }
+    }
+  }
+
+  void statusupdate(String docId, String date) async {
+    try {
+      await getproductdate(docId, date);
+      int index = getProductIndexandtime(docId);
       await productCollection.doc(docId).update({
         'status': true,
-        // Add other fields you want to update here
+        'ptime': index,
       });
+      productids.clear();
       fetchProducts();
     } catch (e) {
       print("Error updating document: $e");
