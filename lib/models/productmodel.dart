@@ -11,6 +11,7 @@ class productmodel {
   final String pdesc;
   final String pid;
   final String sid;
+  final String pimage;
   final String pcategory;
   final bool status;
   final List registeredusers;
@@ -25,6 +26,7 @@ class productmodel {
     required this.pid,
     required this.sid,
     required this.pcategory,
+    required this.pimage,
     required this.status,
     required this.registeredusers,
     required this.dateAdded,
@@ -41,6 +43,7 @@ class productmodel {
         'pid': pid,
         'sid': sid,
         'pcategory': pcategory,
+        'pimage': pimage,
         'status': status,
         'registeredusers': registeredusers,
         'dateAdded': dateAdded,

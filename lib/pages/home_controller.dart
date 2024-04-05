@@ -174,10 +174,16 @@ class HomeController extends GetxController {
       });
       productids.clear();
       fetchProducts();
+      Get.snackbar('Acceped', "Accepted".toString(), colorText: Colors.green);
     } catch (e) {
       print("Error updating document: $e");
     } finally {
+       
       update();
     }
+  }
+    refreshPage() async {
+    await fetchProducts();
+    update();
   }
 }

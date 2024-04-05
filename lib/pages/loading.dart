@@ -11,7 +11,7 @@ class _LoadingState extends State<Loading> {
   void initState() {
     super.initState();
     Timer(
-        Duration(seconds: 2),
+        Duration(seconds: 3),
         () => Navigator.pushReplacement(
             context, MaterialPageRoute(builder: (context) => login())));
   }
@@ -19,13 +19,14 @@ class _LoadingState extends State<Loading> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Circular Image Example',
       home: Scaffold(
         backgroundColor: Colors.white,
         body: Center(
           child: CircleAvatar(
             radius: 150, // Adjust according to your preference
-            backgroundImage: AssetImage('assets/auctionlogo.jpg'),
+            backgroundImage: AssetImage('assets/admin.jpg'),
           ),
         ),
       ),
