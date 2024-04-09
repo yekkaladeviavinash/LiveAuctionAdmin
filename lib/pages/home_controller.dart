@@ -1,5 +1,6 @@
 import 'package:admin/models/datemodel.dart';
 import 'package:admin/models/productmodel.dart';
+import 'package:admin/models/usermodel.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
@@ -8,16 +9,20 @@ import 'package:flutter/material.dart';
 //await Firebase.intializeApp
 
 class HomeController extends GetxController {
+  Iterable<usermodel>? seller;
   FirebaseFirestore firestore = FirebaseFirestore.instance;
   late CollectionReference productCollection;
   late CollectionReference datecollection;
+  late CollectionReference usercollection;
   List<productmodel> products = [];
   List<datemodel> dateli = [];
   List<dynamic> productids = [];
+  List<usermodel> userslist = [];
   @override
   void onInit() async {
     productCollection = firestore.collection('products');
     datecollection = firestore.collection('dates');
+    usercollection = firestore.collection('users');
     await fetchProducts();
     super.onInit();
   }
@@ -164,6 +169,30 @@ class HomeController extends GetxController {
     }
   }
 
+  getuserdetails(String userid) async {
+    try {
+      QuerySnapshot usersnapshot = await usercollection.get();
+      final List<usermodel> retrievedusers = usersnapshot.docs.map((doc) {
+        final userData = doc.data();
+        if (userData != null) {
+          // print(userData as Map<String, dynamic>);
+          return usermodel.fromJson(userData as Map<String, dynamic>);
+        } else {
+          throw Exception('Document data is null');
+        }
+      }).toList();
+
+      userslist.clear();
+      userslist.assignAll(retrievedusers);
+      update();
+    } catch (e) {
+      print("Error shown in seller controller ${e}");
+    }
+    Iterable<usermodel> curruser =
+        userslist.where((user) => user.uid == userid);
+    seller = curruser;
+  }
+
   void statusupdate(String docId, String date) async {
     try {
       await getproductdate(docId, date);
@@ -178,11 +207,11 @@ class HomeController extends GetxController {
     } catch (e) {
       print("Error updating document: $e");
     } finally {
-       
       update();
     }
   }
-    refreshPage() async {
+
+  refreshPage() async {
     await fetchProducts();
     update();
   }

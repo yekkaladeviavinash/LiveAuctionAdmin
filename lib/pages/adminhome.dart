@@ -1,5 +1,5 @@
-
 import 'package:admin/pages/home_controller.dart';
+import 'package:admin/pages/seller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
@@ -14,7 +14,6 @@ class Adminhome extends StatelessWidget {
     return GetBuilder<HomeController>(
       builder: (ctrl) {
         return Scaffold(
-
           appBar: AppBar(
             title: Text(
               'Welcome Admin!',
@@ -48,6 +47,15 @@ class Adminhome extends StatelessWidget {
                     onPressedDelete: () {
                       ctrl.deleteProduct(ctrl.products[index].pid ?? '');
                     },
+                    onuser: () {
+                      ctrl.getuserdetails(ctrl.products[index].sid ?? '');
+                      Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SellerDetailsPage(),
+                                ),
+                              );
+                    },
                     onPressedAccept: () {
                       ctrl.statusupdate(
                         ctrl.products[index].pid ?? '',
@@ -74,6 +82,7 @@ class AdminCard extends StatelessWidget {
   final String bool;
   final VoidCallback onPressedDelete;
   final VoidCallback onPressedAccept;
+  final VoidCallback onuser;
   final double screenWidth;
   final double screenHeight;
 
@@ -88,6 +97,7 @@ class AdminCard extends StatelessWidget {
     required this.onPressedAccept,
     required this.screenWidth,
     required this.screenHeight,
+    required this.onuser,
   });
 
   @override
@@ -127,6 +137,17 @@ class AdminCard extends StatelessWidget {
                     ),
                   ),
                   SizedBox(height: 8.0),
+                  InkWell(
+                    onTap:onuser ,
+                     child: Text(
+                      'User Details',
+                      style: TextStyle(
+                        fontSize: screenWidth * 0.03,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                      ),
+                                       ),
+                   ),
                   Text(
                     'Bid Price: $bidPrice',
                     style: TextStyle(
@@ -155,55 +176,78 @@ class AdminCard extends StatelessWidget {
                       color: bool == 'true' ? Colors.green : Colors.red,
                     ),
                   ),
+                   
                   SizedBox(height: 16.0),
                   Row(
-  children: [
-    if (bool != 'true') // Show "Accept" button only when bool is not true
-      Expanded(
-        child: ElevatedButton(
-          onPressed: onPressedAccept,
-          child: const Text('Accept', style: TextStyle(color: Colors.white)),
-          style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.symmetric(vertical: 12.0),
-            backgroundColor: Colors.green[400],
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-      ),
-    if (bool == 'true') // Show "Delete" button only when bool is true
-      Expanded(
-        child: ElevatedButton(
-          onPressed: onPressedDelete,
-          child: const Text('Delete', style: TextStyle(color: Colors.white)),
-          style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.symmetric(vertical: 12.0),
-            backgroundColor: Colors.red[400],
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-      ),
-    if (bool != 'true') // Show "Delete" button only when bool is not true
-      SizedBox(width: 8.0),
-    if (bool != 'true') // Show "Delete" button only when bool is not true
-      Expanded(
-        child: ElevatedButton(
-          onPressed: onPressedDelete,
-          child: const Text('Delete', style: TextStyle(color: Colors.white)),
-          style: ElevatedButton.styleFrom(
-            padding: EdgeInsets.symmetric(vertical: 12.0),
-            backgroundColor: Colors.red[400],
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
-            ),
-          ),
-        ),
-      ),
-  ],
-),
+                    children: [
+                      // Expanded(
+                      //   child: ElevatedButton(
+                      //     onPressed:onuser,
+                      //     child: const Text('User',
+                      //         style: TextStyle(color: Colors.white)),
+                      //     style: ElevatedButton.styleFrom(
+                      //       padding: EdgeInsets.symmetric(vertical: 12.0),
+                      //       backgroundColor: Colors.blue[400],
+                      //       shape: RoundedRectangleBorder(
+                      //         borderRadius: BorderRadius.circular(8),
+                      //       ),
+                      //     ),
+                      //   ),
+                      // ),
+                      if (bool !=
+                          'true') // Show "Accept" button only when bool is not true
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: onPressedAccept,
+                            child: const Text('Accept',
+                                style: TextStyle(color: Colors.white)),
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(vertical: 12.0),
+                              backgroundColor: Colors.green[400],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          ),
+                        ),
+                      if (bool ==
+                          'true') // Show "Delete" button only when bool is true
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: onPressedDelete,
+                            child: const Text('Delete',
+                                style: TextStyle(color: Colors.white)),
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(vertical: 12.0),
+                              backgroundColor: Colors.red[400],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          ),
+                        ),
+                      if (bool !=
+                          'true') // Show "Delete" button only when bool is not true
+                        SizedBox(width: 8.0),
+                      if (bool !=
+                          'true') // Show "Delete" button only when bool is not true
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: onPressedDelete,
+                            child: const Text('Delete',
+                                style: TextStyle(color: Colors.white)),
+                            style: ElevatedButton.styleFrom(
+                              padding: EdgeInsets.symmetric(vertical: 12.0),
+                              backgroundColor: Colors.red[400],
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              ),
+                            ),
+                          ),
+                        ),
+                      
+                    ],
+                  ),
                 ],
               ),
             ),
