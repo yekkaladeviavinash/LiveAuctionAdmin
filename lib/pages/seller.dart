@@ -2,7 +2,17 @@ import 'package:admin/pages/home_controller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-class SellerDetailsPage extends StatelessWidget {
+class SellerDetailsPage extends StatefulWidget {
+  final String? productlocation;
+  const SellerDetailsPage({
+    Key? key,
+    required this.productlocation,
+  }) : super(key: key);
+  @override
+  State<SellerDetailsPage> createState() => _SellerDetailsPageState();
+}
+
+class _SellerDetailsPageState extends State<SellerDetailsPage> {
   @override
   Widget build(BuildContext context) {
     return GetBuilder<HomeController>(builder: (ctrl) {
@@ -52,8 +62,8 @@ class SellerDetailsPage extends StatelessWidget {
                       Divider(),
                       _buildDetailRow(
                         icon: Icons.location_on,
-                        label: 'Location',
-                        value: 'Sun City, Hyderabad',
+                        label: 'Product Location',
+                        value: widget.productlocation!,
                       ),
                     ],
                   ),
