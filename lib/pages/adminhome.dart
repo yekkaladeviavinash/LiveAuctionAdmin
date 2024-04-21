@@ -525,14 +525,58 @@
 //     );
 //   }
 // }
+import 'dart:convert';
+
 import 'package:admin/pages/home_controller.dart';
 import 'package:admin/pages/seller.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:http/http.dart' as http;
 
 class Adminhome extends StatelessWidget {
   const Adminhome({Key? key}) : super(key: key);
+postData(String sellermail) async {
+  try {
+    final response = await http.post(
+      Uri.parse('http://10.81.66.192:3000/sellerconfirm'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'selleremail': sellermail,
+      }),
+    );
 
+    if (response.statusCode == 200) {
+      print('Data posted successfully');
+    } else {
+      print('Failed to post data: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Exception while posting data: $e');
+  }
+}
+postdeleteData(String sellermail) async {
+  try {
+    final response = await http.post(
+      Uri.parse('http://10.81.66.192:3000/sellerdelete'),
+      headers: <String, String>{
+        'Content-Type': 'application/json',
+      },
+      body: jsonEncode(<String, dynamic>{
+        'selleremail': sellermail,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      print('Data posted successfully');
+    } else {
+      print('Failed to post data: ${response.statusCode}');
+    }
+  } catch (e) {
+    print('Exception while posting data: $e');
+  }
+}
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
@@ -571,8 +615,10 @@ class Adminhome extends StatelessWidget {
                     bool: ctrl.products[index].status.toString() ?? '',
                     screenWidth: screenWidth,
                     screenHeight: screenHeight,
-                    onPressedDelete: () {
+                    onPressedDelete: () async{
                       ctrl.deleteProduct(ctrl.products[index].pid ?? '');
+                      String? smail=await ctrl.getusermail(ctrl.products[index].sid);
+                      postdeleteData(smail.toString());
                     },
                     onuser: () {
                       ctrl.getuserdetails(ctrl.products[index].sid ?? '');
@@ -599,11 +645,13 @@ class Adminhome extends StatelessWidget {
                             ),
                             TextButton(
                               child: const Text("Accept"),
-                              onPressed: () {
+                              onPressed: () async{
                                 ctrl.statusupdate(
                                   ctrl.products[index].pid ?? '',
                                   ctrl.products[index].dateAdded ?? '',
                                 );
+                                 String? smail=await ctrl.getusermail(ctrl.products[index].sid);
+                                postData(smail.toString());
                                 Navigator.of(context).pop();
                               },
                             ),
@@ -648,6 +696,10 @@ class AdminCard extends StatelessWidget {
     required this.screenHeight,
     required this.onuser,
   });
+
+
+
+
 
   @override
   Widget build(BuildContext context) {
@@ -731,7 +783,8 @@ class AdminCard extends StatelessWidget {
                       if (bool != 'true') // Show "Accept" button only when bool is not true
                         Expanded(
                           child: ElevatedButton(
-                            onPressed: onPressedAccept,
+                            onPressed:onPressedAccept,
+
                             child: const Text('Accept',
                                 style: TextStyle(color: Colors.white)),
                             style: ElevatedButton.styleFrom(

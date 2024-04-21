@@ -192,6 +192,30 @@ class HomeController extends GetxController {
         userslist.where((user) => user.uid == userid);
     seller = curruser;
   }
+   Future<String?> getusermail(String userid) async {
+    try {
+      QuerySnapshot usersnapshot = await usercollection.get();
+      final List<usermodel> retrievedusers = usersnapshot.docs.map((doc) {
+        final userData = doc.data();
+        if (userData != null) {
+          // print(userData as Map<String, dynamic>);
+          return usermodel.fromJson(userData as Map<String, dynamic>);
+        } else {
+          throw Exception('Document data is null');
+        }
+      }).toList();
+
+      userslist.clear();
+      userslist.assignAll(retrievedusers);
+      update();
+    } catch (e) {
+      print("Error shown in seller controller ${e}");
+    }
+    Iterable<usermodel> curruser =
+        userslist.where((user) => user.uid == userid);
+    seller = curruser;
+    return curruser.firstOrNull?.email;
+  }
 
   void statusupdate(String docId, String date) async {
     try {
